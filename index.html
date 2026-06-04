@@ -71,7 +71,7 @@ svg{width:100%;height:auto;display:block}
 <body>
 <header>
   <h1>🔭 VNS Platforma — Kalkulator</h1>
-  <p>Vertical North Segment · Reiner Vogel metoda · sa vizuelnim prikazom · v3</p>
+  <p>Vertical North Segment · Reiner Vogel metoda · sa vizuelnim prikazom · v4</p>
 </header>
 
 <div class="container">
@@ -91,7 +91,7 @@ svg{width:100%;height:auto;display:block}
           <div class="small">mm iznad platforme</div>
         </div>
         <div>
-          <label>L_pad — stranica trokuta Teflon padova</label>
+          <label>L_nog — stranica trokuta nogica rockerboxa</label>
           <input type="number" id="lpad" value="390" min="100" max="1000" step="1">
           <div class="small">mm</div>
         </div>
@@ -109,18 +109,18 @@ svg{width:100%;height:auto;display:block}
     <div class="card-body">
       <div class="grid3">
         <div class="result"><div class="rlabel">β = 90° − φ</div><div><span class="rvalue" id="r_beta">—</span><span class="runit"> °</span></div><div class="formula">90 - φ</div></div>
-        <div class="result"><div class="rlabel">r — circumradius padova</div><div><span class="rvalue" id="r_rpad">—</span><span class="runit"> mm</span></div><div class="formula">L_pad / √3</div></div>
-        <div class="result"><div class="rlabel">d_pad — pola N padova</div><div><span class="rvalue" id="r_dpad">—</span><span class="runit"> mm</span></div><div class="formula">L_pad / 2</div></div>
+        <div class="result"><div class="rlabel">r — opisani radijus nogica</div><div><span class="rvalue" id="r_rpad">—</span><span class="runit"> mm</span></div><div class="formula">L_nog / √3</div></div>
+        <div class="result"><div class="rlabel">d_nog — pola razmaka sjevernih nogica</div><div><span class="rvalue" id="r_dpad">—</span><span class="runit"> mm</span></div><div class="formula">L_nog / 2</div></div>
 
         <div class="result"><div class="rlabel">a — od azimutne osi</div><div><span class="rvalue" id="r_a">—</span><span class="runit"> mm</span></div><div class="formula">CG / tan(φ)</div></div>
-        <div class="result"><div class="rlabel">b − a</div><div><span class="rvalue" id="r_bma">—</span><span class="runit"> mm</span></div><div class="formula">√(r² − d_pad²)</div></div>
+        <div class="result"><div class="rlabel">b − a</div><div><span class="rvalue" id="r_bma">—</span><span class="runit"> mm</span></div><div class="formula">√(r² − d_nog²)</div></div>
         <div class="result"><div class="rlabel">b — do N segmenta</div><div><span class="rvalue" id="r_b">—</span><span class="runit"> mm</span></div><div class="formula">a + (b−a)</div></div>
 
         <div class="result"><div class="rlabel">c′ — projekcija</div><div><span class="rvalue" id="r_cp">—</span><span class="runit"> mm</span></div><div class="formula">b × sin(φ)</div></div>
         <div class="result key"><div class="rlabel">c — radijus segmenta</div><div><span class="rvalue" id="r_c">—</span><span class="runit"> mm</span></div><div class="formula">b / sin(φ)</div></div>
         <div class="result"><div class="rlabel">d — tracking površina</div><div><span class="rvalue" id="r_d">—</span><span class="runit"> mm</span></div><div class="formula">(t/24) × 2πc</div></div>
 
-        <div class="result"><div class="rlabel">e — širina platforme</div><div><span class="rvalue" id="r_e">—</span><span class="runit"> mm</span></div><div class="formula">L_pad + d</div></div>
+        <div class="result"><div class="rlabel">e — širina platforme</div><div><span class="rvalue" id="r_e">—</span><span class="runit"> mm</span></div><div class="formula">L_nog + d</div></div>
         <div class="result"><div class="rlabel">e_vns — razvučena širina</div><div><span class="rvalue" id="r_evns">—</span><span class="runit"> mm</span></div><div class="formula">e / cos(β)</div></div>
         <div class="result key"><div class="rlabel">aₑ / bₑ — poluose elipse</div><div><span class="rvalue" id="r_axes">—</span></div><div class="formula">c i c·cos(φ)</div></div>
 
@@ -137,7 +137,7 @@ svg{width:100%;height:auto;display:block}
       <div class="visual-grid">
 
         <div class="viz">
-          <h3>1) Teflon padovi odozgo <span class="badge">r, d_pad, b−a</span></h3>
+          <h3>1) Nogice rockerboxa odozgo <span class="badge">r, d_nog, b−a</span></h3>
           <div class="viz-body">
             <svg id="svgPads" viewBox="0 0 420 300">
               <defs>
@@ -159,7 +159,7 @@ svg{width:100%;height:auto;display:block}
               <text id="txtR" font-size="13" fill="#0F6E56" font-weight="700"></text>
               <text id="txtDPad" font-size="13" fill="#185FA5" font-weight="700"></text>
               </svg>
-            <p class="svg-note">Crvena linija = dva sjeverna pada; zelena udaljenost = b − a.</p>
+            <p class="svg-note">Crvena linija = dvije sjeverne nogice; zelena udaljenost = b − a.</p>
           </div>
         </div>
 
@@ -313,11 +313,11 @@ function drawPads(L,rpad,dpad,bma){
   $('p3').setAttribute('cx',cx); $('p3').setAttribute('cy',southY);
   $('pc').setAttribute('cx',cx); $('pc').setAttribute('cy',cy);
   $('txtL').setAttribute('x',cx-20); $('txtL').setAttribute('y',southY+22);
-  $('txtL').textContent=`L_pad = ${L.toFixed(0)} mm`;
+  $('txtL').textContent=`L_nog = ${L.toFixed(0)} mm`;
   $('txtR').setAttribute('x',cx+14); $('txtR').setAttribute('y',(cy+topY)/2+8);
   $('txtR').textContent=`b−a = ${bma.toFixed(0)} mm`;
   $('txtDPad').setAttribute('x',rightX-62); $('txtDPad').setAttribute('y',topY-36);
-  $('txtDPad').textContent=`d_pad = ${dpad.toFixed(0)} mm`;
+  $('txtDPad').textContent=`d_nog = ${dpad.toFixed(0)} mm`;
 }
 
 function drawAxis(phi,CG,a){
