@@ -36,10 +36,12 @@ header p{font-size:12px;margin:3px 0 0;opacity:.85}
 .grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
 @media(max-width:760px){.grid,.grid3{grid-template-columns:1fr}}
 label{display:block;font-size:12px;color:var(--gray);font-weight:600;margin-bottom:5px}
-input{
+input, select{
   width:100%; padding:10px 11px; border:1.5px solid var(--line); border-radius:9px;
   font-size:16px; background:#fff; color:var(--text); font-weight:600;
 }
+.track-row{display:grid;grid-template-columns:1fr 120px;gap:8px}
+@media(max-width:420px){.track-row{grid-template-columns:1fr}}
 .result{
   background:#F1EFE8; border-radius:10px; padding:10px 12px; min-height:78px;
 }
@@ -71,7 +73,7 @@ svg{width:100%;height:auto;display:block}
 <body>
 <header>
   <h1>🔭 VNS Platforma — Kalkulator</h1>
-  <p>Vertical North Segment · Reiner Vogel metoda · sa vizuelnim prikazom · v4</p>
+  <p>Vertical North Segment · Reiner Vogel metoda · sa vizuelnim prikazom · v5</p>
 </header>
 
 <div class="container">
@@ -97,8 +99,14 @@ svg{width:100%;height:auto;display:block}
         </div>
         <div>
           <label>Tracking — trajanje</label>
-          <input type="number" id="track" value="1.5" min="0.25" max="4" step="0.25">
-          <div class="small">sati</div>
+          <div class="track-row">
+            <input type="number" id="track" value="90" min="0" step="1" inputmode="decimal">
+            <select id="trackUnit">
+              <option value="min" selected>minuta</option>
+              <option value="h">sati</option>
+            </select>
+          </div>
+          <div class="small">Primjer: 10 minuta → upiši 10 i izaberi minute. 1.5 h → upiši 1.5 i izaberi sati.</div>
         </div>
       </div>
     </div>
@@ -118,7 +126,7 @@ svg{width:100%;height:auto;display:block}
 
         <div class="result"><div class="rlabel">c′ — projekcija</div><div><span class="rvalue" id="r_cp">—</span><span class="runit"> mm</span></div><div class="formula">b × sin(φ)</div></div>
         <div class="result key"><div class="rlabel">c — radijus segmenta</div><div><span class="rvalue" id="r_c">—</span><span class="runit"> mm</span></div><div class="formula">b / sin(φ)</div></div>
-        <div class="result"><div class="rlabel">d — tracking površina</div><div><span class="rvalue" id="r_d">—</span><span class="runit"> mm</span></div><div class="formula">(t/24) × 2πc</div></div>
+        <div class="result"><div class="rlabel">d — tracking površina</div><div><span class="rvalue" id="r_d">—</span><span class="runit"> mm</span></div><div class="formula">(t_h / 24) × 2πc</div></div>
 
         <div class="result"><div class="rlabel">e — širina platforme</div><div><span class="rvalue" id="r_e">—</span><span class="runit"> mm</span></div><div class="formula">L_nog + d</div></div>
         <div class="result"><div class="rlabel">e_vns — razvučena širina</div><div><span class="rvalue" id="r_evns">—</span><span class="runit"> mm</span></div><div class="formula">e / cos(β)</div></div>
@@ -159,7 +167,7 @@ svg{width:100%;height:auto;display:block}
               <text id="txtR" font-size="13" fill="#0F6E56" font-weight="700"></text>
               <text id="txtDPad" font-size="13" fill="#185FA5" font-weight="700"></text>
               </svg>
-            <p class="svg-note">Crvena linija = dvije sjeverne nogice; zelena udaljenost = b − a.</p>
+            <p class="svg-note">Crvena linija = dva sjeverna nogica; zelena udaljenost = b − a.</p>
           </div>
         </div>
 
@@ -246,10 +254,19 @@ function arcPath(cx,cy,r,a0,a1){
 }
 
 function calc(){
-  const phi=+$('phi').value || 46;
-  const CG=+$('cg').value || 440;
-  const L=+$('lpad').value || 390;
-  const t=+$('track').value || 1.5;
+  const num = (id, fallback) => {
+    const raw = String($(id).value || '').replace(',', '.');
+    const v = parseFloat(raw);
+    return isFinite(v) ? v : fallback;
+  };
+
+  const phi = num('phi', 46);
+  const CG  = num('cg', 440);
+  const L   = num('lpad', 390);
+
+  const trackInput = num('track', 90);
+  const trackUnit = $('trackUnit') ? $('trackUnit').value : 'min';
+  const t = trackUnit === 'min' ? trackInput / 60 : trackInput;
 
   const DEG=Math.PI/180;
   const ph=phi*DEG;
@@ -389,7 +406,7 @@ function drawEllipse(ae,be,cp,halfW,vnsH){
   $('txtWork').textContent=`VNS dio: ${(2*halfW).toFixed(0)} × ${vnsH.toFixed(0)} mm`;
 }
 
-document.querySelectorAll('input').forEach(el=>{
+document.querySelectorAll('input, select').forEach(el=>{
   el.addEventListener('input', calc);
   el.addEventListener('change', calc);
 });
