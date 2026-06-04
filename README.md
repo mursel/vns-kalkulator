@@ -18,3 +18,7 @@ python3 -m http.server 8000
 ```
 Onda otvori:
 http://localhost:8000
+
+Github page: 
+https://mursel.github.io/vns-kalkulator/
+
