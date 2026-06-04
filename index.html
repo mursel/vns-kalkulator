@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VNS Kalkulator — vizuelno</title>
+<style>
+:root{
+  --blue:#185FA5; --blue2:#E6F1FB; --red:#CC3300; --red2:#FAECE7;
+  --green:#0F6E56; --green2:#E1F5EE; --amber:#BA7517; --amber2:#FAEEDA;
+  --gray:#5F5E5A; --line:#D3D1C7; --bg:#FAF8F3; --card:#fff; --text:#2C2C2A;
+}
+*{box-sizing:border-box}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:var(--bg); color:var(--text); margin:0; padding:0 0 32px;
+  line-height:1.35;
+}
+header{
+  background:var(--blue); color:#fff; padding:14px 16px 11px;
+  position:sticky; top:0; z-index:10; box-shadow:0 2px 8px rgba(0,0,0,.18);
+}
+header h1{font-size:18px;margin:0;font-weight:700}
+header p{font-size:12px;margin:3px 0 0;opacity:.85}
+.container{max-width:920px;margin:0 auto;padding:14px}
+.card{
+  background:var(--card); border:1px solid var(--line); border-radius:14px;
+  margin:0 0 14px; overflow:hidden;
+}
+.card h2{
+  font-size:15px;margin:0;padding:12px 14px;border-bottom:1px solid var(--line);
+  display:flex;gap:8px;align-items:center;
+}
+.card-body{padding:14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+@media(max-width:760px){.grid,.grid3{grid-template-columns:1fr}}
+label{display:block;font-size:12px;color:var(--gray);font-weight:600;margin-bottom:5px}
+input{
+  width:100%; padding:10px 11px; border:1.5px solid var(--line); border-radius:9px;
+  font-size:16px; background:#fff; color:var(--text); font-weight:600;
+}
+.result{
+  background:#F1EFE8; border-radius:10px; padding:10px 12px; min-height:78px;
+}
+.result.key{background:var(--blue2);border:1.5px solid var(--blue)}
+.result.good{background:var(--green2);border:1.5px solid var(--green)}
+.result.warn{background:var(--red2);border:1.5px solid var(--red)}
+.rlabel{font-size:11px;color:var(--gray);margin-bottom:3px}
+.rvalue{font-size:22px;font-weight:800;line-height:1.05}
+.runit{font-size:12px;font-weight:500;color:var(--gray)}
+.formula{font-size:11px;color:var(--gray);font-family:ui-monospace,Consolas,monospace;margin-top:4px}
+.visual-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:860px){.visual-grid{grid-template-columns:1fr}}
+.viz{
+  border:1px solid var(--line); border-radius:12px; background:#fff; overflow:hidden;
+}
+.viz h3{
+  margin:0; padding:10px 12px; font-size:14px; border-bottom:1px solid var(--line);
+  background:#F7F4ED;
+}
+.viz-body{padding:8px}
+svg{width:100%;height:auto;display:block}
+.note{font-size:12px;color:var(--gray);margin:8px 2px 0}
+.badge{display:inline-block;background:var(--blue2);color:var(--blue);border-radius:99px;padding:2px 8px;font-size:11px;font-weight:700}
+.small{font-size:12px;color:var(--gray)}
+.footer-note{text-align:center;font-size:11px;color:var(--gray);margin-top:18px}
+</style>
+
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#185FA5">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="VNS Kalkulator">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+
+</head>
+<body>
+<header>
+  <h1>🔭 VNS Platforma — Kalkulator</h1>
+  <p>Vertical North Segment · Reiner Vogel metoda · sa vizuelnim prikazom</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+    <h2>📐 Ulazne vrijednosti</h2>
+    <div class="card-body">
+      <div class="grid">
+        <div>
+          <label>φ — geografska širina</label>
+          <input type="number" id="phi" value="46" min="20" max="70" step="0.1">
+          <div class="small">stepeni °</div>
+        </div>
+        <div>
+          <label>CG — visina centra gravitacije</label>
+          <input type="number" id="cg" value="440" min="50" max="2000" step="1">
+          <div class="small">mm iznad platforme</div>
+        </div>
+        <div>
+          <label>L_pad — stranica trokuta Teflon padova</label>
+          <input type="number" id="lpad" value="390" min="100" max="1000" step="1">
+          <div class="small">mm</div>
+        </div>
+        <div>
+          <label>Tracking — trajanje</label>
+          <input type="number" id="track" value="1.5" min="0.25" max="4" step="0.25">
+          <div class="small">sati</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🧮 Rezultati izračuna</h2>
+    <div class="card-body">
+      <div class="grid3">
+        <div class="result"><div class="rlabel">β = 90° − φ</div><div><span class="rvalue" id="r_beta">—</span><span class="runit"> °</span></div><div class="formula">90 - φ</div></div>
+        <div class="result"><div class="rlabel">r — circumradius padova</div><div><span class="rvalue" id="r_rpad">—</span><span class="runit"> mm</span></div><div class="formula">L_pad / √3</div></div>
+        <div class="result"><div class="rlabel">d_pad — pola N padova</div><div><span class="rvalue" id="r_dpad">—</span><span class="runit"> mm</span></div><div class="formula">L_pad / 2</div></div>
+
+        <div class="result"><div class="rlabel">a — od azimutne osi</div><div><span class="rvalue" id="r_a">—</span><span class="runit"> mm</span></div><div class="formula">CG / tan(φ)</div></div>
+        <div class="result"><div class="rlabel">b − a</div><div><span class="rvalue" id="r_bma">—</span><span class="runit"> mm</span></div><div class="formula">√(r² − d_pad²)</div></div>
+        <div class="result"><div class="rlabel">b — do N segmenta</div><div><span class="rvalue" id="r_b">—</span><span class="runit"> mm</span></div><div class="formula">a + (b−a)</div></div>
+
+        <div class="result"><div class="rlabel">c′ — projekcija</div><div><span class="rvalue" id="r_cp">—</span><span class="runit"> mm</span></div><div class="formula">b × sin(φ)</div></div>
+        <div class="result key"><div class="rlabel">c — radijus segmenta</div><div><span class="rvalue" id="r_c">—</span><span class="runit"> mm</span></div><div class="formula">b / sin(φ)</div></div>
+        <div class="result"><div class="rlabel">d — tracking površina</div><div><span class="rvalue" id="r_d">—</span><span class="runit"> mm</span></div><div class="formula">(t/24) × 2πc</div></div>
+
+        <div class="result"><div class="rlabel">e — širina platforme</div><div><span class="rvalue" id="r_e">—</span><span class="runit"> mm</span></div><div class="formula">L_pad + d</div></div>
+        <div class="result"><div class="rlabel">e_vns — razvučena širina</div><div><span class="rvalue" id="r_evns">—</span><span class="runit"> mm</span></div><div class="formula">e / cos(β)</div></div>
+        <div class="result key"><div class="rlabel">aₑ / bₑ — poluose elipse</div><div><span class="rvalue" id="r_axes">—</span></div><div class="formula">c i c·cos(φ)</div></div>
+
+        <div class="result good"><div class="rlabel">Puna elipsa</div><div><span class="rvalue" id="r_full">—</span></div><div class="formula">2aₑ × 2bₑ</div></div>
+        <div class="result good"><div class="rlabel">VNS dio — širina</div><div><span class="rvalue" id="r_vw">—</span><span class="runit"> mm</span></div><div class="formula">2aₑ√(1-(c′/bₑ)²)</div></div>
+        <div class="result good"><div class="rlabel">VNS dio — visina</div><div><span class="rvalue" id="r_vh">—</span><span class="runit"> mm</span></div><div class="formula">bₑ − c′</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>👁️ Vizuelno — šta računamo</h2>
+    <div class="card-body">
+      <div class="visual-grid">
+
+        <div class="viz">
+          <h3>1) Teflon padovi odozgo <span class="badge">r, d_pad, b−a</span></h3>
+          <div class="viz-body">
+            <svg id="svgPads" viewBox="0 0 420 300">
+              <defs>
+                <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 Z" fill="#185FA5"></path>
+                </marker>
+                <marker id="arrowBack" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto">
+                  <path d="M8,0 L0,4 L8,8 Z" fill="#185FA5"></path>
+                </marker>
+              </defs>
+              <rect x="0" y="0" width="420" height="300" fill="#fff"/>
+              <polygon id="tri" points="" fill="#E6F1FB" stroke="#185FA5" stroke-width="2"/>
+              <line id="northLine" x1="0" y1="0" x2="0" y2="0" stroke="#CC3300" stroke-width="3"/>
+              <line id="centerToNorth" x1="0" y1="0" x2="0" y2="0" stroke="#0F6E56" stroke-width="2" stroke-dasharray="6 4"/>
+              <line id="halfNorth" x1="0" y1="0" x2="0" y2="0" stroke="#185FA5" stroke-width="2" marker-start="url(#arrowBack)" marker-end="url(#arrow)"/>
+              <circle id="p1" r="7" fill="#CC3300"/><circle id="p2" r="7" fill="#CC3300"/><circle id="p3" r="7" fill="#CC3300"/>
+              <circle id="pc" r="5" fill="#0F6E56"/>
+              <text id="txtL" font-size="14" fill="#185FA5" font-weight="700"></text>
+              <text id="txtR" font-size="13" fill="#0F6E56" font-weight="700"></text>
+              <text id="txtD" font-size="13" fill="#185FA5" font-weight="700"></text>
+              <text x="14" y="280" font-size="12" fill="#5F5E5A">Crvena linija = dva sjeverna pada; zelena udaljenost = b − a.</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="viz">
+          <h3>2) Bočni pogled polarne osi <span class="badge">a, CG, φ</span></h3>
+          <div class="viz-body">
+            <svg id="svgAxis" viewBox="0 0 420 300">
+              <rect x="0" y="0" width="420" height="300" fill="#fff"/>
+              <line x1="40" y1="235" x2="390" y2="235" stroke="#2C2C2A" stroke-width="2"/>
+              <line id="axisLine" x1="0" y1="0" x2="0" y2="0" stroke="#CC3300" stroke-width="3"/>
+              <line id="cgLine" x1="0" y1="0" x2="0" y2="0" stroke="#185FA5" stroke-width="2" stroke-dasharray="5 4"/>
+              <line id="aLine" x1="0" y1="0" x2="0" y2="0" stroke="#0F6E56" stroke-width="2" marker-start="url(#arrowBack)" marker-end="url(#arrow)"/>
+              <circle id="axisBase" r="5" fill="#CC3300"/>
+              <circle id="cgDot" r="7" fill="#185FA5"/>
+              <path id="angleArc" d="" fill="none" stroke="#BA7517" stroke-width="2"/>
+              <text id="txtA" font-size="13" fill="#0F6E56" font-weight="700"></text>
+              <text id="txtCG" font-size="13" fill="#185FA5" font-weight="700"></text>
+              <text id="txtPhi" font-size="13" fill="#BA7517" font-weight="700"></text>
+              <text x="14" y="280" font-size="12" fill="#5F5E5A">Polarna os prolazi kroz CG pod uglom φ.</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="viz">
+          <h3>3) Kružni segment <span class="badge">b, c′, c, d</span></h3>
+          <div class="viz-body">
+            <svg id="svgCircle" viewBox="0 0 420 300">
+              <rect x="0" y="0" width="420" height="300" fill="#fff"/>
+              <circle id="bigCircle" cx="190" cy="170" r="110" fill="none" stroke="#D3D1C7" stroke-width="2"/>
+              <path id="trackArc" d="" fill="none" stroke="#CC3300" stroke-width="5" stroke-linecap="round"/>
+              <line id="radiusLine" x1="0" y1="0" x2="0" y2="0" stroke="#185FA5" stroke-width="2"/>
+              <line id="projLine" x1="0" y1="0" x2="0" y2="0" stroke="#0F6E56" stroke-width="2" stroke-dasharray="6 4"/>
+              <circle id="circleCenter" r="5" fill="#185FA5"/>
+              <circle id="segPoint" r="6" fill="#CC3300"/>
+              <text id="txtC" font-size="13" fill="#185FA5" font-weight="700"></text>
+              <text id="txtCP" font-size="13" fill="#0F6E56" font-weight="700"></text>
+              <text id="txtD" font-size="13" fill="#CC3300" font-weight="700"></text>
+              <text x="14" y="280" font-size="12" fill="#5F5E5A">c je radijus “konopca”, d je dužina tracking luka.</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="viz">
+          <h3>4) VNS elipsa <span class="badge">poluose i donji dio</span></h3>
+          <div class="viz-body">
+            <svg id="svgEllipse" viewBox="0 0 420 300">
+              <rect x="0" y="0" width="420" height="300" fill="#fff"/>
+              <ellipse id="ellMain" cx="210" cy="145" rx="145" ry="100" fill="#FAEEDA" stroke="#CC3300" stroke-width="2"/>
+              <line id="ellRef" x1="45" y1="0" x2="375" y2="0" stroke="#185FA5" stroke-width="2" stroke-dasharray="7 4"/>
+              <path id="ellWork" d="" fill="rgba(15,110,86,.12)" stroke="#0F6E56" stroke-width="3"/>
+              <line id="ellH" x1="0" y1="0" x2="0" y2="0" stroke="#185FA5" stroke-width="2" marker-start="url(#arrowBack)" marker-end="url(#arrow)"/>
+              <line id="ellV" x1="0" y1="0" x2="0" y2="0" stroke="#BA7517" stroke-width="2" marker-start="url(#arrowBack)" marker-end="url(#arrow)"/>
+              <text id="txtAxes" font-size="13" fill="#185FA5" font-weight="700"></text>
+              <text id="txtWork" font-size="13" fill="#0F6E56" font-weight="700"></text>
+              <text x="14" y="280" font-size="12" fill="#5F5E5A">Zeleni dio = donji VNS dio koji se koristi za segmente.</text>
+            </svg>
+          </div>
+        </div>
+
+      </div>
+      <p class="note">Napomena: crteži su skalirani da stanu na ekran, ali brojevi u rezultatima su stvarni u mm.</p>
+    </div>
+  </div>
+
+  <div class="footer-note">Radi offline · napravljeno za VNS platformu</div>
+</div>
+
+<script>
+function $(id){ return document.getElementById(id); }
+function setText(id, val, dec=0, suffix=''){
+  const el=$(id); if(!el) return;
+  if(!isFinite(val)) el.textContent='—';
+  else el.textContent=Number(val).toFixed(dec)+suffix;
+}
+function polar(cx,cy,r,angDeg){
+  let a=(angDeg-90)*Math.PI/180;
+  return {x:cx+r*Math.cos(a), y:cy+r*Math.sin(a)};
+}
+function arcPath(cx,cy,r,a0,a1){
+  let p0=polar(cx,cy,r,a0), p1=polar(cx,cy,r,a1);
+  let large=Math.abs(a1-a0)>180?1:0;
+  let sweep=a1>a0?1:0;
+  return `M ${p0.x.toFixed(1)} ${p0.y.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${p1.x.toFixed(1)} ${p1.y.toFixed(1)}`;
+}
+
+function calc(){
+  const phi=+$('phi').value || 46;
+  const CG=+$('cg').value || 440;
+  const L=+$('lpad').value || 390;
+  const t=+$('track').value || 1.5;
+
+  const DEG=Math.PI/180;
+  const ph=phi*DEG;
+  const beta=90-phi;
+  const betaR=beta*DEG;
+
+  const rpad=L/Math.sqrt(3);
+  const dpad=L/2;
+  const bma=Math.sqrt(Math.max(0,rpad*rpad-dpad*dpad));
+  const a=CG/Math.tan(ph);
+  const b=a+bma;
+  const cp=b*Math.sin(ph);
+  const c=b/Math.sin(ph);
+  const d=(t/24)*2*Math.PI*c;
+  const e=L+d;
+  const ae=c;
+  const be=c*Math.cos(ph);
+  const evns=e/Math.cos(betaR);
+  const denom=Math.max(0,1-(cp/be)**2);
+  const vnsHalfW=ae*Math.sqrt(denom);
+  const vnsW=2*vnsHalfW;
+  const vnsH=be-cp;
+
+  setText('r_beta', beta, 1);
+  setText('r_rpad', rpad, 0);
+  setText('r_dpad', dpad, 0);
+  setText('r_a', a, 0);
+  setText('r_bma', bma, 0);
+  setText('r_b', b, 0);
+  setText('r_cp', cp, 0);
+  setText('r_c', c, 0);
+  setText('r_d', d, 0);
+  setText('r_e', e, 0);
+  setText('r_evns', evns, 0);
+  $('r_axes').textContent = `${ae.toFixed(0)} × ${be.toFixed(0)}`;
+  $('r_full').textContent = `${(2*ae).toFixed(0)} × ${(2*be).toFixed(0)}`;
+  setText('r_vw', vnsW, 0);
+  setText('r_vh', vnsH, 0);
+
+  drawPads(L,rpad,dpad,bma);
+  drawAxis(phi,CG,a);
+  drawCircle(c,cp,d,t);
+  drawEllipse(ae,be,cp,vnsHalfW,vnsH);
+}
+
+function drawPads(L,rpad,dpad,bma){
+  const cx=210, cy=155;
+  const scale=95/rpad;
+  const topY=cy-bma*scale;
+  const leftX=cx-dpad*scale, rightX=cx+dpad*scale;
+  const southY=cy+(rpad+bma)*scale;
+  $('tri').setAttribute('points',`${leftX},${topY} ${rightX},${topY} ${cx},${southY}`);
+  $('northLine').setAttribute('x1',leftX); $('northLine').setAttribute('y1',topY);
+  $('northLine').setAttribute('x2',rightX); $('northLine').setAttribute('y2',topY);
+  $('centerToNorth').setAttribute('x1',cx); $('centerToNorth').setAttribute('y1',cy);
+  $('centerToNorth').setAttribute('x2',cx); $('centerToNorth').setAttribute('y2',topY);
+  $('halfNorth').setAttribute('x1',cx); $('halfNorth').setAttribute('y1',topY-18);
+  $('halfNorth').setAttribute('x2',rightX); $('halfNorth').setAttribute('y2',topY-18);
+  $('p1').setAttribute('cx',leftX); $('p1').setAttribute('cy',topY);
+  $('p2').setAttribute('cx',rightX); $('p2').setAttribute('cy',topY);
+  $('p3').setAttribute('cx',cx); $('p3').setAttribute('cy',southY);
+  $('pc').setAttribute('cx',cx); $('pc').setAttribute('cy',cy);
+  $('txtL').setAttribute('x',cx-20); $('txtL').setAttribute('y',southY+22);
+  $('txtL').textContent=`L_pad = ${L.toFixed(0)} mm`;
+  $('txtR').setAttribute('x',cx+8); $('txtR').setAttribute('y',(cy+topY)/2);
+  $('txtR').textContent=`b−a = ${bma.toFixed(0)} mm`;
+  $('txtD').setAttribute('x',(cx+rightX)/2-28); $('txtD').setAttribute('y',topY-25);
+  $('txtD').textContent=`d_pad = ${dpad.toFixed(0)} mm`;
+}
+
+function drawAxis(phi,CG,a){
+  const baseX=80, baseY=235;
+  const cgX=300, cgY=75;
+  $('axisBase').setAttribute('cx',baseX); $('axisBase').setAttribute('cy',baseY);
+  $('cgDot').setAttribute('cx',cgX); $('cgDot').setAttribute('cy',cgY);
+  $('axisLine').setAttribute('x1',baseX); $('axisLine').setAttribute('y1',baseY);
+  $('axisLine').setAttribute('x2',cgX); $('axisLine').setAttribute('y2',cgY);
+  $('cgLine').setAttribute('x1',cgX); $('cgLine').setAttribute('y1',baseY);
+  $('cgLine').setAttribute('x2',cgX); $('cgLine').setAttribute('y2',cgY);
+  $('aLine').setAttribute('x1',baseX); $('aLine').setAttribute('y1',baseY+20);
+  $('aLine').setAttribute('x2',cgX); $('aLine').setAttribute('y2',baseY+20);
+  $('angleArc').setAttribute('d',arcPath(baseX,baseY,48,90-phi,90));
+  $('txtA').setAttribute('x',(baseX+cgX)/2-35); $('txtA').setAttribute('y',baseY+38);
+  $('txtA').textContent=`a = ${a.toFixed(0)} mm`;
+  $('txtCG').setAttribute('x',cgX+8); $('txtCG').setAttribute('y',(baseY+cgY)/2);
+  $('txtCG').textContent=`CG = ${CG.toFixed(0)} mm`;
+  $('txtPhi').setAttribute('x',baseX+40); $('txtPhi').setAttribute('y',baseY-18);
+  $('txtPhi').textContent=`φ = ${phi.toFixed(1)}°`;
+}
+
+function drawCircle(c,cp,d,t){
+  const cx=190, cy=165, R=108;
+  $('bigCircle').setAttribute('cx',cx); $('bigCircle').setAttribute('cy',cy); $('bigCircle').setAttribute('r',R);
+  const arcDeg=(t/24)*360;
+  const start=270-arcDeg/2, end=270+arcDeg/2;
+  $('trackArc').setAttribute('d',arcPath(cx,cy,R,start,end));
+  const p=polar(cx,cy,R,270);
+  $('radiusLine').setAttribute('x1',cx); $('radiusLine').setAttribute('y1',cy);
+  $('radiusLine').setAttribute('x2',p.x); $('radiusLine').setAttribute('y2',p.y);
+  $('projLine').setAttribute('x1',p.x); $('projLine').setAttribute('y1',cy);
+  $('projLine').setAttribute('x2',p.x); $('projLine').setAttribute('y2',p.y);
+  $('circleCenter').setAttribute('cx',cx); $('circleCenter').setAttribute('cy',cy);
+  $('segPoint').setAttribute('cx',p.x); $('segPoint').setAttribute('cy',p.y);
+  $('txtC').setAttribute('x',cx+18); $('txtC').setAttribute('y',(cy+p.y)/2);
+  $('txtC').textContent=`c = ${c.toFixed(0)} mm`;
+  $('txtCP').setAttribute('x',p.x+10); $('txtCP').setAttribute('y',(cy+p.y)/2+18);
+  $('txtCP').textContent=`c′ = ${cp.toFixed(0)} mm`;
+  $('txtD').setAttribute('x',cx-45); $('txtD').setAttribute('y',p.y-15);
+  $('txtD').textContent=`d = ${d.toFixed(0)} mm`;
+}
+
+function drawEllipse(ae,be,cp,halfW,vnsH){
+  const cx=210, cy=138;
+  const rx=145, ry=100;
+  $('ellMain').setAttribute('cx',cx); $('ellMain').setAttribute('cy',cy);
+  $('ellMain').setAttribute('rx',rx); $('ellMain').setAttribute('ry',ry);
+  const refY=cy+(cp/be)*ry;
+  $('ellRef').setAttribute('y1',refY); $('ellRef').setAttribute('y2',refY);
+  const xInt=(halfW/ae)*rx;
+  let d=`M ${(cx-xInt).toFixed(1)} ${refY.toFixed(1)} `;
+  for(let i=0;i<=80;i++){
+    let x=-halfW + (2*halfW)*i/80;
+    let y=be*Math.sqrt(Math.max(0,1-(x*x)/(ae*ae)));
+    let X=cx+(x/ae)*rx;
+    let Y=cy+(y/be)*ry;
+    d+=`L ${X.toFixed(1)} ${Y.toFixed(1)} `;
+  }
+  d+=`L ${(cx+xInt).toFixed(1)} ${refY.toFixed(1)} Z`;
+  $('ellWork').setAttribute('d',d);
+  $('ellH').setAttribute('x1',cx-rx); $('ellH').setAttribute('y1',cy+ry+18);
+  $('ellH').setAttribute('x2',cx+rx); $('ellH').setAttribute('y2',cy+ry+18);
+  $('ellV').setAttribute('x1',cx+rx+25); $('ellV').setAttribute('y1',cy-ry);
+  $('ellV').setAttribute('x2',cx+rx+25); $('ellV').setAttribute('y2',cy+ry);
+  $('txtAxes').setAttribute('x',cx-92); $('txtAxes').setAttribute('y',cy+ry+38);
+  $('txtAxes').textContent=`puna elipsa ${(2*ae).toFixed(0)} × ${(2*be).toFixed(0)} mm`;
+  $('txtWork').setAttribute('x',cx-95); $('txtWork').setAttribute('y',refY+25);
+  $('txtWork').textContent=`VNS dio: ${(2*halfW).toFixed(0)} × ${vnsH.toFixed(0)} mm`;
+}
+
+document.querySelectorAll('input').forEach(el=>{
+  el.addEventListener('input', calc);
+  el.addEventListener('change', calc);
+});
+calc();
+</script>
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("./sw.js").catch(err => {
+      console.log("Service Worker registration failed:", err);
+    });
+  });
+}
+</script>
+
+</body>
+</html>
