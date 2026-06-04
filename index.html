@@ -62,25 +62,16 @@ input{
 .viz-body{padding:8px}
 svg{width:100%;height:auto;display:block}
 .note{font-size:12px;color:var(--gray);margin:8px 2px 0}
+.svg-note{font-size:12px;color:var(--gray);margin:8px 2px 4px;padding:0 4px}
 .badge{display:inline-block;background:var(--blue2);color:var(--blue);border-radius:99px;padding:2px 8px;font-size:11px;font-weight:700}
 .small{font-size:12px;color:var(--gray)}
 .footer-note{text-align:center;font-size:11px;color:var(--gray);margin-top:18px}
 </style>
-
-<link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#185FA5">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="VNS Kalkulator">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<link rel="icon" href="icons/icon-192.png">
-<link rel="apple-touch-icon" href="icons/icon-192.png">
-
 </head>
 <body>
 <header>
   <h1>🔭 VNS Platforma — Kalkulator</h1>
-  <p>Vertical North Segment · Reiner Vogel metoda · sa vizuelnim prikazom</p>
+  <p>Vertical North Segment · Reiner Vogel metoda · sa vizuelnim prikazom · v3</p>
 </header>
 
 <div class="container">
@@ -100,7 +91,7 @@ svg{width:100%;height:auto;display:block}
           <div class="small">mm iznad platforme</div>
         </div>
         <div>
-          <label>L_pad — rastojanje izmedju nogica rockerboxa</label>
+          <label>L_pad — stranica trokuta Teflon padova</label>
           <input type="number" id="lpad" value="390" min="100" max="1000" step="1">
           <div class="small">mm</div>
         </div>
@@ -166,9 +157,9 @@ svg{width:100%;height:auto;display:block}
               <circle id="pc" r="5" fill="#0F6E56"/>
               <text id="txtL" font-size="14" fill="#185FA5" font-weight="700"></text>
               <text id="txtR" font-size="13" fill="#0F6E56" font-weight="700"></text>
-              <text id="txtD" font-size="13" fill="#185FA5" font-weight="700"></text>
-              <text x="14" y="300" font-size="12" fill="#5F5E5A">Crvena linija = dva sjeverna pada; zelena udaljenost = b − a.</text>
-            </svg>
+              <text id="txtDPad" font-size="13" fill="#185FA5" font-weight="700"></text>
+              </svg>
+            <p class="svg-note">Crvena linija = dva sjeverna pada; zelena udaljenost = b − a.</p>
           </div>
         </div>
 
@@ -187,8 +178,8 @@ svg{width:100%;height:auto;display:block}
               <text id="txtA" font-size="13" fill="#0F6E56" font-weight="700"></text>
               <text id="txtCG" font-size="13" fill="#185FA5" font-weight="700"></text>
               <text id="txtPhi" font-size="13" fill="#BA7517" font-weight="700"></text>
-              <text x="14" y="280" font-size="12" fill="#5F5E5A">Polarna os prolazi kroz CG pod uglom φ.</text>
-            </svg>
+              </svg>
+            <p class="svg-note">Polarna os prolazi kroz CG pod uglom φ.</p>
           </div>
         </div>
 
@@ -205,9 +196,9 @@ svg{width:100%;height:auto;display:block}
               <circle id="segPoint" r="6" fill="#CC3300"/>
               <text id="txtC" font-size="13" fill="#185FA5" font-weight="700"></text>
               <text id="txtCP" font-size="13" fill="#0F6E56" font-weight="700"></text>
-              <text id="txtD" font-size="13" fill="#CC3300" font-weight="700"></text>
-              <text x="14" y="280" font-size="12" fill="#5F5E5A">c je radijus “konopca”, d je dužina tracking luka.</text>
-            </svg>
+              <text id="txtDTrack" font-size="13" fill="#CC3300" font-weight="700"></text>
+              </svg>
+            <p class="svg-note">c je radijus “konopca”, d je dužina tracking luka.</p>
           </div>
         </div>
 
@@ -223,8 +214,8 @@ svg{width:100%;height:auto;display:block}
               <line id="ellV" x1="0" y1="0" x2="0" y2="0" stroke="#BA7517" stroke-width="2" marker-start="url(#arrowBack)" marker-end="url(#arrow)"/>
               <text id="txtAxes" font-size="13" fill="#185FA5" font-weight="700"></text>
               <text id="txtWork" font-size="13" fill="#0F6E56" font-weight="700"></text>
-              <text x="14" y="280" font-size="12" fill="#5F5E5A">Zeleni dio = donji VNS dio koji se koristi za segmente.</text>
-            </svg>
+              </svg>
+            <p class="svg-note">Zeleni dio = donji VNS dio koji se koristi za segmente.</p>
           </div>
         </div>
 
@@ -323,10 +314,10 @@ function drawPads(L,rpad,dpad,bma){
   $('pc').setAttribute('cx',cx); $('pc').setAttribute('cy',cy);
   $('txtL').setAttribute('x',cx-20); $('txtL').setAttribute('y',southY+22);
   $('txtL').textContent=`L_pad = ${L.toFixed(0)} mm`;
-  $('txtR').setAttribute('x',cx+8); $('txtR').setAttribute('y',(cy+topY)/2);
+  $('txtR').setAttribute('x',cx+14); $('txtR').setAttribute('y',(cy+topY)/2+8);
   $('txtR').textContent=`b−a = ${bma.toFixed(0)} mm`;
-  $('txtD').setAttribute('x',(cx+rightX)/2-28); $('txtD').setAttribute('y',topY-25);
-  $('txtD').textContent=`d_pad = ${dpad.toFixed(0)} mm`;
+  $('txtDPad').setAttribute('x',rightX-62); $('txtDPad').setAttribute('y',topY-36);
+  $('txtDPad').textContent=`d_pad = ${dpad.toFixed(0)} mm`;
 }
 
 function drawAxis(phi,CG,a){
@@ -366,8 +357,8 @@ function drawCircle(c,cp,d,t){
   $('txtC').textContent=`c = ${c.toFixed(0)} mm`;
   $('txtCP').setAttribute('x',p.x+10); $('txtCP').setAttribute('y',(cy+p.y)/2+18);
   $('txtCP').textContent=`c′ = ${cp.toFixed(0)} mm`;
-  $('txtD').setAttribute('x',cx-45); $('txtD').setAttribute('y',p.y-15);
-  $('txtD').textContent=`d = ${d.toFixed(0)} mm`;
+  $('txtDTrack').setAttribute('x',cx-45); $('txtDTrack').setAttribute('y',p.y-15);
+  $('txtDTrack').textContent=`d = ${d.toFixed(0)} mm`;
 }
 
 function drawEllipse(ae,be,cp,halfW,vnsH){
@@ -404,16 +395,5 @@ document.querySelectorAll('input').forEach(el=>{
 });
 calc();
 </script>
-
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("./sw.js").catch(err => {
-      console.log("Service Worker registration failed:", err);
-    });
-  });
-}
-</script>
-
 </body>
 </html>
