@@ -9,7 +9,7 @@ Bitno:
 Najlakše:
 1. Uploaduj cijeli folder na GitHub Pages, Netlify, Vercel ili bilo koji HTTPS hosting.
 2. Otvori link u Chrome na Androidu.
-3. Chrome menu ⋮ → Install app / App installieren / Zum Startbildschirm hinzufügen.
+3. Chrome menu ⋮ → Install app -> Add to Home screen
 
 Za lokalni test na računaru:
 ```bash
