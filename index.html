@@ -22,6 +22,10 @@ header{
 }
 header h1{font-size:18px;margin:0;font-weight:700}
 header p{font-size:12px;margin:3px 0 0;opacity:.85}
+.header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.lang-box{min-width:130px}
+.lang-box label{display:block;color:#fff;font-size:11px;margin-bottom:4px;opacity:.9}
+.lang-box select{background:#fff;color:#2C2C2A;font-size:14px;padding:7px 10px}
 .container{max-width:920px;margin:0 auto;padding:14px}
 .card{
   background:var(--card); border:1px solid var(--line); border-radius:14px;
@@ -72,80 +76,92 @@ svg{width:100%;height:auto;display:block}
 </head>
 <body>
 <header>
-  <h1>🔭 VNS Platforma — Kalkulator</h1>
-  <p>Vertical North Segment · Reiner Vogel metoda · sa vizuelnim prikazom · v5</p>
+  <div class="header-top">
+    <div>
+      <h1 id="appTitle">🔭 VNS Platforma — Kalkulator</h1>
+      <p id="appSubtitle">Vertical North Segment · Reiner Vogel metoda · sa vizuelnim prikazom · v6</p>
+    </div>
+    <div class="lang-box">
+      <label id="langLabel" for="langSelect">Jezik</label>
+      <select id="langSelect">
+        <option value="bs" selected>Bosanski</option>
+        <option value="en">English</option>
+        <option value="de">Deutsch</option>
+      </select>
+    </div>
+  </div>
 </header>
 
 <div class="container">
 
   <div class="card">
-    <h2>📐 Ulazne vrijednosti</h2>
+    <h2 id="cardInputsTitle">📐 Ulazne vrijednosti</h2>
     <div class="card-body">
       <div class="grid">
         <div>
-          <label>φ — geografska širina</label>
+          <label id="lblPhi">φ — geografska širina</label>
           <input type="number" id="phi" value="46" min="20" max="70" step="0.1">
-          <div class="small">stepeni °</div>
+          <div class="small" id="helpPhi">stepeni °</div>
         </div>
         <div>
-          <label>CG — visina centra gravitacije</label>
+          <label id="lblCg">CG — visina centra gravitacije</label>
           <input type="number" id="cg" value="440" min="50" max="2000" step="1">
-          <div class="small">mm iznad platforme</div>
+          <div class="small" id="helpCg">mm iznad platforme</div>
         </div>
         <div>
-          <label>L_nog — stranica trokuta nogica rockerboxa</label>
+          <label id="lblLnog">L_nog — stranica trokuta nogica rockerboxa</label>
           <input type="number" id="lpad" value="390" min="100" max="1000" step="1">
-          <div class="small">mm</div>
+          <div class="small" id="helpLnog">mm</div>
         </div>
         <div>
-          <label>Tracking — trajanje</label>
+          <label id="lblTrack">Tracking — trajanje</label>
           <div class="track-row">
             <input type="number" id="track" value="90" min="0" step="1" inputmode="decimal">
             <select id="trackUnit">
-              <option value="min" selected>minuta</option>
-              <option value="h">sati</option>
+              <option id="optMin" value="min" selected>minuta</option>
+              <option id="optHours" value="h">sati</option>
             </select>
           </div>
-          <div class="small">Primjer: 10 minuta → upiši 10 i izaberi minute. 1.5 h → upiši 1.5 i izaberi sati.</div>
+          <div class="small" id="helpTrack">Primjer: 10 minuta → upiši 10 i izaberi minuta. 1.5 h → upiši 1.5 i izaberi sati.</div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h2>🧮 Rezultati izračuna</h2>
+    <h2 id="cardResultsTitle">🧮 Rezultati izračuna</h2>
     <div class="card-body">
       <div class="grid3">
-        <div class="result"><div class="rlabel">β = 90° − φ</div><div><span class="rvalue" id="r_beta">—</span><span class="runit"> °</span></div><div class="formula">90 - φ</div></div>
-        <div class="result"><div class="rlabel">r — opisani radijus nogica</div><div><span class="rvalue" id="r_rpad">—</span><span class="runit"> mm</span></div><div class="formula">L_nog / √3</div></div>
-        <div class="result"><div class="rlabel">d_nog — pola razmaka sjevernih nogica</div><div><span class="rvalue" id="r_dpad">—</span><span class="runit"> mm</span></div><div class="formula">L_nog / 2</div></div>
+        <div class="result"><div class="rlabel"><span id="rl_beta">β = 90° − φ</span></div><div><span class="rvalue" id="r_beta">—</span><span class="runit"> °</span></div><div class="formula"><span id="rf_beta">90 - φ</span></div></div>
+        <div class="result"><div class="rlabel"><span id="rl_rpad">r — opisani radijus nogica</span></div><div><span class="rvalue" id="r_rpad">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_rpad">L_nog / √3</span></div></div>
+        <div class="result"><div class="rlabel"><span id="rl_dpad">d_nog — pola razmaka sjevernih nogica</span></div><div><span class="rvalue" id="r_dpad">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_dpad">L_nog / 2</span></div></div>
 
-        <div class="result"><div class="rlabel">a — od azimutne osi</div><div><span class="rvalue" id="r_a">—</span><span class="runit"> mm</span></div><div class="formula">CG / tan(φ)</div></div>
-        <div class="result"><div class="rlabel">b − a</div><div><span class="rvalue" id="r_bma">—</span><span class="runit"> mm</span></div><div class="formula">√(r² − d_nog²)</div></div>
-        <div class="result"><div class="rlabel">b — do N segmenta</div><div><span class="rvalue" id="r_b">—</span><span class="runit"> mm</span></div><div class="formula">a + (b−a)</div></div>
+        <div class="result"><div class="rlabel"><span id="rl_a">a — od azimutne osi</span></div><div><span class="rvalue" id="r_a">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_a">CG / tan(φ)</span></div></div>
+        <div class="result"><div class="rlabel"><span id="rl_bma">b − a</span></div><div><span class="rvalue" id="r_bma">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_bma">√(r² − d_nog²)</span></div></div>
+        <div class="result"><div class="rlabel"><span id="rl_b">b — do N segmenta</span></div><div><span class="rvalue" id="r_b">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_b">a + (b−a)</span></div></div>
 
-        <div class="result"><div class="rlabel">c′ — projekcija</div><div><span class="rvalue" id="r_cp">—</span><span class="runit"> mm</span></div><div class="formula">b × sin(φ)</div></div>
-        <div class="result key"><div class="rlabel">c — radijus segmenta</div><div><span class="rvalue" id="r_c">—</span><span class="runit"> mm</span></div><div class="formula">b / sin(φ)</div></div>
-        <div class="result"><div class="rlabel">d — tracking površina</div><div><span class="rvalue" id="r_d">—</span><span class="runit"> mm</span></div><div class="formula">(t_h / 24) × 2πc</div></div>
+        <div class="result"><div class="rlabel"><span id="rl_cp">c′ — projekcija</span></div><div><span class="rvalue" id="r_cp">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_cp">b × sin(φ)</span></div></div>
+        <div class="result key"><div class="rlabel"><span id="rl_c">c — radijus segmenta</span></div><div><span class="rvalue" id="r_c">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_c">b / sin(φ)</span></div></div>
+        <div class="result"><div class="rlabel"><span id="rl_d">d — tracking površina</span></div><div><span class="rvalue" id="r_d">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_d">(t_h / 24) × 2πc</span></div></div>
 
-        <div class="result"><div class="rlabel">e — širina platforme</div><div><span class="rvalue" id="r_e">—</span><span class="runit"> mm</span></div><div class="formula">L_nog + d</div></div>
-        <div class="result"><div class="rlabel">e_vns — razvučena širina</div><div><span class="rvalue" id="r_evns">—</span><span class="runit"> mm</span></div><div class="formula">e / cos(β)</div></div>
-        <div class="result key"><div class="rlabel">aₑ / bₑ — poluose elipse</div><div><span class="rvalue" id="r_axes">—</span></div><div class="formula">c i c·cos(φ)</div></div>
+        <div class="result"><div class="rlabel"><span id="rl_e">e — širina platforme</span></div><div><span class="rvalue" id="r_e">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_e">L_nog + d</span></div></div>
+        <div class="result"><div class="rlabel"><span id="rl_evns">e_vns — razvučena širina</span></div><div><span class="rvalue" id="r_evns">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_evns">e / cos(β)</span></div></div>
+        <div class="result key"><div class="rlabel"><span id="rl_axes">aₑ / bₑ — poluose elipse</span></div><div><span class="rvalue" id="r_axes">—</span></div><div class="formula"><span id="rf_axes">c i c·cos(φ)</span></div></div>
 
-        <div class="result good"><div class="rlabel">Puna elipsa</div><div><span class="rvalue" id="r_full">—</span></div><div class="formula">2aₑ × 2bₑ</div></div>
-        <div class="result good"><div class="rlabel">VNS dio — širina</div><div><span class="rvalue" id="r_vw">—</span><span class="runit"> mm</span></div><div class="formula">2aₑ√(1-(c′/bₑ)²)</div></div>
-        <div class="result good"><div class="rlabel">VNS dio — visina</div><div><span class="rvalue" id="r_vh">—</span><span class="runit"> mm</span></div><div class="formula">bₑ − c′</div></div>
+        <div class="result good"><div class="rlabel"><span id="rl_full">Puna elipsa</span></div><div><span class="rvalue" id="r_full">—</span></div><div class="formula"><span id="rf_full">2aₑ × 2bₑ</span></div></div>
+        <div class="result good"><div class="rlabel"><span id="rl_vw">VNS dio — širina</span></div><div><span class="rvalue" id="r_vw">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_vw">2aₑ√(1-(c′/bₑ)²)</span></div></div>
+        <div class="result good"><div class="rlabel"><span id="rl_vh">VNS dio — visina</span></div><div><span class="rvalue" id="r_vh">—</span><span class="runit"> mm</span></div><div class="formula"><span id="rf_vh">bₑ − c′</span></div></div>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h2>👁️ Vizuelno — šta računamo</h2>
+    <h2 id="cardVisualTitle">👁️ Vizuelno — šta računamo</h2>
     <div class="card-body">
       <div class="visual-grid">
 
         <div class="viz">
-          <h3>1) Nogice rockerboxa odozgo <span class="badge">r, d_nog, b−a</span></h3>
+          <h3><span id="viz1Title">1) Nogice rockerboxa odozgo</span> <span class="badge" id="viz1Badge">r, d_nog, b−a</span></h3>
           <div class="viz-body">
             <svg id="svgPads" viewBox="0 0 420 300">
               <defs>
@@ -167,12 +183,12 @@ svg{width:100%;height:auto;display:block}
               <text id="txtR" font-size="13" fill="#0F6E56" font-weight="700"></text>
               <text id="txtDPad" font-size="13" fill="#185FA5" font-weight="700"></text>
               </svg>
-            <p class="svg-note">Crvena linija = dva sjeverna nogica; zelena udaljenost = b − a.</p>
+            <p class="svg-note" id="notePads">Crvena linija = dvije sjeverne nogice; zelena udaljenost = b − a.</p>
           </div>
         </div>
 
         <div class="viz">
-          <h3>2) Bočni pogled polarne osi <span class="badge">a, CG, φ</span></h3>
+          <h3><span id="viz2Title">2) Bočni pogled polarne osi</span> <span class="badge" id="viz2Badge">a, CG, φ</span></h3>
           <div class="viz-body">
             <svg id="svgAxis" viewBox="0 0 420 300">
               <rect x="0" y="0" width="420" height="300" fill="#fff"/>
@@ -187,12 +203,12 @@ svg{width:100%;height:auto;display:block}
               <text id="txtCG" font-size="13" fill="#185FA5" font-weight="700"></text>
               <text id="txtPhi" font-size="13" fill="#BA7517" font-weight="700"></text>
               </svg>
-            <p class="svg-note">Polarna os prolazi kroz CG pod uglom φ.</p>
+            <p class="svg-note" id="noteAxis">Polarna os prolazi kroz CG pod uglom φ.</p>
           </div>
         </div>
 
         <div class="viz">
-          <h3>3) Kružni segment <span class="badge">b, c′, c, d</span></h3>
+          <h3><span id="viz3Title">3) Kružni segment</span> <span class="badge" id="viz3Badge">b, c′, c, d</span></h3>
           <div class="viz-body">
             <svg id="svgCircle" viewBox="0 0 420 300">
               <rect x="0" y="0" width="420" height="300" fill="#fff"/>
@@ -206,12 +222,12 @@ svg{width:100%;height:auto;display:block}
               <text id="txtCP" font-size="13" fill="#0F6E56" font-weight="700"></text>
               <text id="txtDTrack" font-size="13" fill="#CC3300" font-weight="700"></text>
               </svg>
-            <p class="svg-note">c je radijus “konopca”, d je dužina tracking luka.</p>
+            <p class="svg-note" id="noteCircle">c je radijus “konopca”, d je dužina tracking luka.</p>
           </div>
         </div>
 
         <div class="viz">
-          <h3>4) VNS elipsa <span class="badge">poluose i donji dio</span></h3>
+          <h3><span id="viz4Title">4) VNS elipsa</span> <span class="badge" id="viz4Badge">poluose i donji dio</span></h3>
           <div class="viz-body">
             <svg id="svgEllipse" viewBox="0 0 420 300">
               <rect x="0" y="0" width="420" height="300" fill="#fff"/>
@@ -223,16 +239,16 @@ svg{width:100%;height:auto;display:block}
               <text id="txtAxes" font-size="13" fill="#185FA5" font-weight="700"></text>
               <text id="txtWork" font-size="13" fill="#0F6E56" font-weight="700"></text>
               </svg>
-            <p class="svg-note">Zeleni dio = donji VNS dio koji se koristi za segmente.</p>
+            <p class="svg-note" id="noteEllipse">Zeleni dio = donji VNS dio koji se koristi za segmente.</p>
           </div>
         </div>
 
       </div>
-      <p class="note">Napomena: crteži su skalirani da stanu na ekran, ali brojevi u rezultatima su stvarni u mm.</p>
+      <p class="note" id="noteGeneral">Napomena: crteži su skalirani da stanu na ekran, ali brojevi u rezultatima su stvarni u mm.</p>
     </div>
   </div>
 
-  <div class="footer-note">Radi offline · napravljeno za VNS platformu</div>
+  <div class="footer-note" id="footerNote">Radi offline · napravljeno za VNS platformu</div>
 </div>
 
 <script>
@@ -251,6 +267,228 @@ function arcPath(cx,cy,r,a0,a1){
   let large=Math.abs(a1-a0)>180?1:0;
   let sweep=a1>a0?1:0;
   return `M ${p0.x.toFixed(1)} ${p0.y.toFixed(1)} A ${r} ${r} 0 ${large} ${sweep} ${p1.x.toFixed(1)} ${p1.y.toFixed(1)}`;
+}
+
+function currentLang(){
+  return $('langSelect') ? $('langSelect').value : 'bs';
+}
+const i18n = {
+  bs: {
+    pageTitle: 'VNS Kalkulator — vizuelno',
+    appTitle: '🔭 VNS Platforma — Kalkulator',
+    appSubtitle: 'Vertical North Segment · Reiner Vogel metoda · sa vizuelnim prikazom · v6',
+    langLabel: 'Jezik',
+    cardInputsTitle: '📐 Ulazne vrijednosti',
+    lblPhi: 'φ — geografska širina',
+    helpPhi: 'stepeni °',
+    lblCg: 'CG — visina centra gravitacije',
+    helpCg: 'mm iznad platforme',
+    lblLnog: 'L_nog — stranica trokuta nogica rockerboxa',
+    helpLnog: 'mm',
+    lblTrack: 'Tracking — trajanje',
+    optMin: 'minuta',
+    optHours: 'sati',
+    helpTrack: 'Primjer: 10 minuta → upiši 10 i izaberi minuta. 1.5 h → upiši 1.5 i izaberi sati.',
+    cardResultsTitle: '🧮 Rezultati izračuna',
+    cardVisualTitle: '👁️ Vizuelno — šta računamo',
+    rl_beta: 'β = 90° − φ',
+    rl_rpad: 'r — opisani radijus nogica',
+    rl_dpad: 'd_nog — pola razmaka sjevernih nogica',
+    rl_a: 'a — od azimutne osi',
+    rl_bma: 'b − a',
+    rl_b: 'b — do N segmenta',
+    rl_cp: 'c′ — projekcija',
+    rl_c: 'c — radijus segmenta',
+    rl_d: 'd — tracking površina',
+    rl_e: 'e — širina platforme',
+    rl_evns: 'e_vns — razvučena širina',
+    rl_axes: 'aₑ / bₑ — poluose elipse',
+    rl_full: 'Puna elipsa',
+    rl_vw: 'VNS dio — širina',
+    rl_vh: 'VNS dio — visina',
+    rf_beta: '90 - φ',
+    rf_rpad: 'L_nog / √3',
+    rf_dpad: 'L_nog / 2',
+    rf_a: 'CG / tan(φ)',
+    rf_bma: '√(r² − d_nog²)',
+    rf_b: 'a + (b−a)',
+    rf_cp: 'b × sin(φ)',
+    rf_c: 'b / sin(φ)',
+    rf_d: '(t_h / 24) × 2πc',
+    rf_e: 'L_nog + d',
+    rf_evns: 'e / cos(β)',
+    rf_axes: 'c i c·cos(φ)',
+    rf_full: '2aₑ × 2bₑ',
+    rf_vw: '2aₑ√(1-(c′/bₑ)²)',
+    rf_vh: 'bₑ − c′',
+    viz1Title: '1) Nogice rockerboxa odozgo',
+    viz1Badge: 'r, d_nog, b−a',
+    viz2Title: '2) Bočni pogled polarne osi',
+    viz2Badge: 'a, CG, φ',
+    viz3Title: '3) Kružni segment',
+    viz3Badge: 'b, c′, c, d',
+    viz4Title: '4) VNS elipsa',
+    viz4Badge: 'poluose i donji dio',
+    notePads: 'Crvena linija = dvije sjeverne nogice; zelena udaljenost = b − a.',
+    noteAxis: 'Polarna os prolazi kroz CG pod uglom φ.',
+    noteCircle: 'c je radijus “konopca”, d je dužina tracking luka.',
+    noteEllipse: 'Zeleni dio = donji VNS dio koji se koristi za segmente.',
+    noteGeneral: 'Napomena: crteži su skalirani da stanu na ekran, ali brojevi u rezultatima su stvarni u mm.',
+    footerNote: 'Radi offline · napravljeno za VNS platformu',
+    dynLnog: 'L_nog',
+    dynFullEllipse: 'puna elipsa',
+    dynVnsPart: 'VNS dio'
+  },
+  en: {
+    pageTitle: 'VNS Calculator — visual',
+    appTitle: '🔭 VNS Platform — Calculator',
+    appSubtitle: 'Vertical North Segment · Reiner Vogel method · with visual diagrams · v6',
+    langLabel: 'Language',
+    cardInputsTitle: '📐 Input values',
+    lblPhi: 'φ — geographic latitude',
+    helpPhi: 'degrees °',
+    lblCg: 'CG — center of gravity height',
+    helpCg: 'mm above the platform',
+    lblLnog: 'L_foot — side length of the rocker-box feet triangle',
+    helpLnog: 'mm',
+    lblTrack: 'Tracking — duration',
+    optMin: 'minutes',
+    optHours: 'hours',
+    helpTrack: 'Example: 10 minutes → enter 10 and choose minutes. 1.5 h → enter 1.5 and choose hours.',
+    cardResultsTitle: '🧮 Calculation results',
+    cardVisualTitle: '👁️ Visual — what we are calculating',
+    rl_beta: 'β = 90° − φ',
+    rl_rpad: 'r — circumradius of the feet',
+    rl_dpad: 'd_foot — half the spacing of the north feet',
+    rl_a: 'a — from the azimuth axis',
+    rl_bma: 'b − a',
+    rl_b: 'b — to the N segment',
+    rl_cp: 'c′ — projection',
+    rl_c: 'c — segment radius',
+    rl_d: 'd — tracking arc length',
+    rl_e: 'e — platform width',
+    rl_evns: 'e_vns — stretched width',
+    rl_axes: 'aₑ / bₑ — ellipse semiaxes',
+    rl_full: 'Full ellipse',
+    rl_vw: 'VNS part — width',
+    rl_vh: 'VNS part — height',
+    rf_beta: '90 - φ',
+    rf_rpad: 'L_foot / √3',
+    rf_dpad: 'L_foot / 2',
+    rf_a: 'CG / tan(φ)',
+    rf_bma: '√(r² − d_foot²)',
+    rf_b: 'a + (b−a)',
+    rf_cp: 'b × sin(φ)',
+    rf_c: 'b / sin(φ)',
+    rf_d: '(t_h / 24) × 2πc',
+    rf_e: 'L_foot + d',
+    rf_evns: 'e / cos(β)',
+    rf_axes: 'c and c·cos(φ)',
+    rf_full: '2aₑ × 2bₑ',
+    rf_vw: '2aₑ√(1-(c′/bₑ)²)',
+    rf_vh: 'bₑ − c′',
+    viz1Title: '1) Rocker-box feet — top view',
+    viz1Badge: 'r, d_foot, b−a',
+    viz2Title: '2) Side view of the polar axis',
+    viz2Badge: 'a, CG, φ',
+    viz3Title: '3) Circular segment',
+    viz3Badge: 'b, c′, c, d',
+    viz4Title: '4) VNS ellipse',
+    viz4Badge: 'semiaxes and lower part',
+    notePads: 'Red line = the two north feet; green distance = b − a.',
+    noteAxis: 'The polar axis passes through the CG at angle φ.',
+    noteCircle: 'c is the “string” radius, d is the tracking arc length.',
+    noteEllipse: 'Green area = the lower VNS part used for the segments.',
+    noteGeneral: 'Note: the drawings are scaled to fit the screen, but the result numbers are the real values in mm.',
+    footerNote: 'Works offline · made for the VNS platform',
+    dynLnog: 'L_foot',
+    dynFullEllipse: 'full ellipse',
+    dynVnsPart: 'VNS part'
+  },
+  de: {
+    pageTitle: 'VNS Rechner — visuell',
+    appTitle: '🔭 VNS Plattform — Rechner',
+    appSubtitle: 'Vertical North Segment · Reiner-Vogel-Methode · mit visueller Darstellung · v6',
+    langLabel: 'Sprache',
+    cardInputsTitle: '📐 Eingabewerte',
+    lblPhi: 'φ — geografische Breite',
+    helpPhi: 'Grad °',
+    lblCg: 'CG — Höhe des Schwerpunkts',
+    helpCg: 'mm über der Plattform',
+    lblLnog: 'L_Fuß — Seitenlänge des Dreiecks der Rockerbox-Füße',
+    helpLnog: 'mm',
+    lblTrack: 'Tracking — Dauer',
+    optMin: 'Minuten',
+    optHours: 'Stunden',
+    helpTrack: 'Beispiel: 10 Minuten → 10 eingeben und Minuten wählen. 1,5 h → 1,5 eingeben und Stunden wählen.',
+    cardResultsTitle: '🧮 Berechnungsergebnisse',
+    cardVisualTitle: '👁️ Visuell — was wir berechnen',
+    rl_beta: 'β = 90° − φ',
+    rl_rpad: 'r — Umkreisradius der Füße',
+    rl_dpad: 'd_Fuß — halber Abstand der nördlichen Füße',
+    rl_a: 'a — von der Azimutachse',
+    rl_bma: 'b − a',
+    rl_b: 'b — bis zum N-Segment',
+    rl_cp: 'c′ — Projektion',
+    rl_c: 'c — Segmentradius',
+    rl_d: 'd — Länge des Tracking-Bogens',
+    rl_e: 'e — Breite der Plattform',
+    rl_evns: 'e_vns — entzerrte Breite',
+    rl_axes: 'aₑ / bₑ — Halbachsen der Ellipse',
+    rl_full: 'Volle Ellipse',
+    rl_vw: 'VNS-Teil — Breite',
+    rl_vh: 'VNS-Teil — Höhe',
+    rf_beta: '90 - φ',
+    rf_rpad: 'L_Fuß / √3',
+    rf_dpad: 'L_Fuß / 2',
+    rf_a: 'CG / tan(φ)',
+    rf_bma: '√(r² − d_Fuß²)',
+    rf_b: 'a + (b−a)',
+    rf_cp: 'b × sin(φ)',
+    rf_c: 'b / sin(φ)',
+    rf_d: '(t_h / 24) × 2πc',
+    rf_e: 'L_Fuß + d',
+    rf_evns: 'e / cos(β)',
+    rf_axes: 'c und c·cos(φ)',
+    rf_full: '2aₑ × 2bₑ',
+    rf_vw: '2aₑ√(1-(c′/bₑ)²)',
+    rf_vh: 'bₑ − c′',
+    viz1Title: '1) Rockerbox-Füße — Draufsicht',
+    viz1Badge: 'r, d_Fuß, b−a',
+    viz2Title: '2) Seitenansicht der Polarachse',
+    viz2Badge: 'a, CG, φ',
+    viz3Title: '3) Kreissegment',
+    viz3Badge: 'b, c′, c, d',
+    viz4Title: '4) VNS-Ellipse',
+    viz4Badge: 'Halbachsen und unterer Teil',
+    notePads: 'Rote Linie = die zwei nördlichen Füße; grüne Strecke = b − a.',
+    noteAxis: 'Die Polarachse verläuft durch den Schwerpunkt im Winkel φ.',
+    noteCircle: 'c ist der „Schnur“-Radius, d ist die Länge des Tracking-Bogens.',
+    noteEllipse: 'Grüner Bereich = der untere VNS-Teil, der für die Segmente verwendet wird.',
+    noteGeneral: 'Hinweis: Die Zeichnungen sind für den Bildschirm skaliert, aber die Ergebniswerte sind die echten Werte in mm.',
+    footerNote: 'Offline nutzbar · erstellt für die VNS-Plattform',
+    dynLnog: 'L_Fuß',
+    dynFullEllipse: 'volle Ellipse',
+    dynVnsPart: 'VNS-Teil'
+  }
+};
+
+function applyLang(){
+  const lang = currentLang();
+  const T = i18n[lang] || i18n.bs;
+  document.documentElement.lang = lang;
+  document.title = T.pageTitle;
+  const ids = [
+    'appTitle','appSubtitle','langLabel','cardInputsTitle','lblPhi','helpPhi','lblCg','helpCg',
+    'lblLnog','helpLnog','lblTrack','helpTrack','cardResultsTitle','cardVisualTitle',
+    'rl_beta','rl_rpad','rl_dpad','rl_a','rl_bma','rl_b','rl_cp','rl_c','rl_d','rl_e','rl_evns','rl_axes','rl_full','rl_vw','rl_vh',
+    'rf_beta','rf_rpad','rf_dpad','rf_a','rf_bma','rf_b','rf_cp','rf_c','rf_d','rf_e','rf_evns','rf_axes','rf_full','rf_vw','rf_vh',
+    'viz1Title','viz1Badge','viz2Title','viz2Badge','viz3Title','viz3Badge','viz4Title','viz4Badge',
+    'notePads','noteAxis','noteCircle','noteEllipse','noteGeneral','footerNote'
+  ];
+  ids.forEach(id => { if ($(id) && T[id] !== undefined) $(id).textContent = T[id]; });
+  if ($('optMin')) $('optMin').textContent = T.optMin;
+  if ($('optHours')) $('optHours').textContent = T.optHours;
 }
 
 function calc(){
@@ -313,6 +551,7 @@ function calc(){
 }
 
 function drawPads(L,rpad,dpad,bma){
+  const T = i18n[currentLang()] || i18n.bs;
   const cx=210, cy=155;
   const scale=95/rpad;
   const topY=cy-bma*scale;
@@ -330,14 +569,15 @@ function drawPads(L,rpad,dpad,bma){
   $('p3').setAttribute('cx',cx); $('p3').setAttribute('cy',southY);
   $('pc').setAttribute('cx',cx); $('pc').setAttribute('cy',cy);
   $('txtL').setAttribute('x',cx-20); $('txtL').setAttribute('y',southY+22);
-  $('txtL').textContent=`L_nog = ${L.toFixed(0)} mm`;
+  $('txtL').textContent=`${T.dynLnog} = ${L.toFixed(0)} mm`;
   $('txtR').setAttribute('x',cx+14); $('txtR').setAttribute('y',(cy+topY)/2+8);
   $('txtR').textContent=`b−a = ${bma.toFixed(0)} mm`;
   $('txtDPad').setAttribute('x',rightX-62); $('txtDPad').setAttribute('y',topY-36);
-  $('txtDPad').textContent=`d_nog = ${dpad.toFixed(0)} mm`;
+  $('txtDPad').textContent=`d = ${dpad.toFixed(0)} mm`;
 }
 
 function drawAxis(phi,CG,a){
+  const T = i18n[currentLang()] || i18n.bs;
   const baseX=80, baseY=235;
   const cgX=300, cgY=75;
   $('axisBase').setAttribute('cx',baseX); $('axisBase').setAttribute('cy',baseY);
@@ -358,6 +598,7 @@ function drawAxis(phi,CG,a){
 }
 
 function drawCircle(c,cp,d,t){
+  const T = i18n[currentLang()] || i18n.bs;
   const cx=190, cy=165, R=108;
   $('bigCircle').setAttribute('cx',cx); $('bigCircle').setAttribute('cy',cy); $('bigCircle').setAttribute('r',R);
   const arcDeg=(t/24)*360;
@@ -379,6 +620,7 @@ function drawCircle(c,cp,d,t){
 }
 
 function drawEllipse(ae,be,cp,halfW,vnsH){
+  const T = i18n[currentLang()] || i18n.bs;
   const cx=210, cy=138;
   const rx=145, ry=100;
   $('ellMain').setAttribute('cx',cx); $('ellMain').setAttribute('cy',cy);
@@ -401,15 +643,22 @@ function drawEllipse(ae,be,cp,halfW,vnsH){
   $('ellV').setAttribute('x1',cx+rx+25); $('ellV').setAttribute('y1',cy-ry);
   $('ellV').setAttribute('x2',cx+rx+25); $('ellV').setAttribute('y2',cy+ry);
   $('txtAxes').setAttribute('x',cx-92); $('txtAxes').setAttribute('y',cy+ry+38);
-  $('txtAxes').textContent=`puna elipsa ${(2*ae).toFixed(0)} × ${(2*be).toFixed(0)} mm`;
+  $('txtAxes').textContent=`${T.dynFullEllipse} ${(2*ae).toFixed(0)} × ${(2*be).toFixed(0)} mm`;
   $('txtWork').setAttribute('x',cx-95); $('txtWork').setAttribute('y',refY+25);
-  $('txtWork').textContent=`VNS dio: ${(2*halfW).toFixed(0)} × ${vnsH.toFixed(0)} mm`;
+  $('txtWork').textContent=`${T.dynVnsPart}: ${(2*halfW).toFixed(0)} × ${vnsH.toFixed(0)} mm`;
 }
 
 document.querySelectorAll('input, select').forEach(el=>{
   el.addEventListener('input', calc);
   el.addEventListener('change', calc);
 });
+if ($('langSelect')) {
+  $('langSelect').addEventListener('change', () => {
+    applyLang();
+    calc();
+  });
+}
+applyLang();
 calc();
 </script>
 </body>
